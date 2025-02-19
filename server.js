@@ -7,13 +7,9 @@ dotenv.config();
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 
-
 var led;
-
-
 // parse application/json
 app.use(bodyParser.json())
-
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res)=> {
@@ -24,11 +20,10 @@ app.get('/state', (req, res)=>{
 	res.send(led)
 	console.log(led)
 })
-
 app.post('/eventosLed', (req,res)=>{
 	console.log(req.body.state)
-	var led = req.body.state
 	console.log(led)
+	var led = req.body.state
 })
 
 const PORT = process.env.PORT || 3000;
