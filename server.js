@@ -27,7 +27,8 @@ app.get('/state', (req, res)=>{
 
 app.post('/eventosLed', (req,res)=>{
 	console.log(req.body.state)
-	var led = req.body.state 
+	var led = req.body.state
+	console.log(led)
 })
 
 const PORT = process.env.PORT || 3000;
