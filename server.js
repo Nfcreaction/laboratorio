@@ -21,8 +21,11 @@ app.get('/', (req, res)=> {
 })
 
 app.get('/state', (req, res)=>{
-	res.send(led)
+	res.json({ledstate: led})
 })
+
+app.get('')
+
 
 
 app.post('/eventosLed', (req,res)=>{
