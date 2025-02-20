@@ -10,10 +10,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.set('view engine', 'ejs')
 
-var led;
+var led = OFF;
 
 app.get('/', (req, res)=> {
   res.render('index');
+})
+
+app.get('/humedad/:valor', (req, res)=> {
+  conssole.log(req.params.valor)
+  res.render('index')
 })
 
 app.get('/state', (req, res)=>{
