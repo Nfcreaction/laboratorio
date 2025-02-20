@@ -31,14 +31,12 @@
     <script type="text/javascript">
       $('document').ready(()=>{
         $('#switchLed').change((event)=>{
-
           if (event.target.checked) {
               console.log("Encendido");
               $.post("/eventosLed",{
                 state: "ON"
               });
           }
-
           else {
               console.log("Apagado");
               $.post("/eventosLed",{
@@ -46,6 +44,11 @@
               });
           }
         })
+      setInterval(()=>{
+        $.get("/tiempo",(data)=>{
+          console.log(data)
+        })
+      }, 100)
       });
 
 
