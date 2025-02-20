@@ -16,14 +16,11 @@ app.get('/', (req, res)=> {
   res.render('index');
 })
 
-app.get('/humedad/:valor', (req, res)=> {
-  conssole.log(req.params.valor)
-  res.render('index')
-})
-
-app.get('/state', (req, res)=>{
-  res.send(led)
+app.get('/state/:temperatura/:humedad', (req, res)=>{
+  console.log(req.params.temperatura)
+  console.log(req.params.humedad)
   console.log(led)
+  res.send(led)  
 })
 
 app.post('/eventosLed', (req,res)=>{
