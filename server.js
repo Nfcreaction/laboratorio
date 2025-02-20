@@ -11,7 +11,8 @@ app.use(bodyParser.json())
 app.set('view engine', 'ejs')
 
 var led = "OFF";
-
+var humedad;
+var temperatura;
 app.get('/', (req, res)=> {
   res.render('index');
 })
@@ -19,6 +20,8 @@ app.get('/', (req, res)=> {
 app.get('/state/:temperatura/:humedad', (req, res)=>{
   console.log(req.params.temperatura)
   console.log(req.params.humedad)
+  humedad = req.params.humedad
+  temperatura = req.params.temperatura
   console.log(led)
   res.send(led)  
 })
@@ -28,6 +31,11 @@ app.post('/eventosLed', (req,res)=>{
   console.log(req.body.state)
   console.log(led)
 })
+app.get('/tiempo', (req,res)=>{
+  res.send(humedad)
+  res.send(temperatura)
+})
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
