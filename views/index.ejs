@@ -48,8 +48,8 @@
       setInterval(()=>{
         $.get("/tiempo",(data)=>{
           console.log(data)
-          $("#temp").text(data.temperatura)
-          $("#humd").text(data.humedad)
+          $("#temp").text("Temperatura Actual: "+data.temperatura)
+          $("#humd").text("Humedad: "data.humedad)
         })
       }, 5000)
       });
