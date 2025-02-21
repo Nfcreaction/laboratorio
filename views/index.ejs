@@ -1,60 +1,148 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <title>Laboratorio</title>
-  </head>
-  <body>
+  <title>Laboratorio</title>
+</head>
+<body>
+  <div class="container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="#" class="nav-link">Inicio</a></li>
+        <li class="nav-item"><a href="#app" class="nav-link">App</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Carpeta de campo</a></li>
+      </ul>
+    </header>
+  </div>
+  <div class="container my-1">
+    <div class="p-5 text-center border rounded-3">
+      <h1 class="text-body-emphasis">Laboratorio</h1>
+      <p class="lead">
+        En este trabajo de laboratorio veremos como contralar el encendido y apagado de un led, la medicion de temperatura y humedad mediante un servidor remoto y un ESP8266.
+      </p>
+      <p class="lead text-start ms-5">
+        El sistema consiste en 3 partes:<br>
+        1. Servidor remoto (render.com)<br>
+        2. Interfaz (sitio web alojado en el render.com)<br>
+        3. Hardware (ESP8266)
+      </p>
+      <p class="lead">
+        <h1>Servidor</h1>
+        La funcion del principal del servidor es recibir la informacion del ESP8266 y ejecutar funciones que redireccionen los datos como el encendido/apagado del led, la temperatura y la humedad.<br>
+        <pre class="text-start bg-dark text-white p-3 mt-3">
+          const express = require('express') //Importacion de la libreria Express para la creacion de servidores
+          const app = express() //Ejecuccion de Express
+          const dotenv = require('dotenv'); //Libreria dotenv para la configuraciones de servidor
+          dotenv.config();
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-6">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="switchLed">
-            <label class="form-check-label" for="flexSwitchCheckDefault">Encender/Apagar Luz</label>
-          </div>
-        </div>
-        <div class="col-6">
-          <p id="temp"></p>  
-          <p id="humd"></p>  
+          const bodyParser = require('body-parser') //Body-parser para obtener datos por solicitudes post y formato json
+          app.use(bodyParser.urlencoded({ extended: false }))
+
+          app.use(bodyParser.json())
+          app.set('view engine', 'ejs')
+
+          // Declaracion de las variables con los estados del led, la temp. y humedad
+          var led = "OFF";
+          var humedad;
+          var temperatura;
+
+          // Solicitud get para cuando se ingrese a la pagina de inicio
+          app.get('/', (req, res)=> {
+            res.render('index');
+          })
+
+          // Solicitud get que realiza el ESP82 solicitando el estado de led y entregando la temp y humedad actual
+          app.get('/state/:temperatura/:humedad', (req, res)=>{
+            console.log(req.params.temperatura)
+            console.log(req.params.humedad)
+            humedad = req.params.humedad
+            temperatura = req.params.temperatura
+            console.log(led)
+            res.send(led)  
+          })
+
+          // Solicitud POST que realiza el cliente (usuario) indicando en que estado quiere el led
+          app.post('/eventosLed', (req,res)=>{
+            led = req.body.state
+            console.log(req.body.state)
+            console.log(led)
+          })
+
+          // Solicitud GET que realiza el cliente para obtener los datos de temperatura y humedad
+          app.get('/tiempo', (req,res)=>{
+            res.json({
+              "temperatura": temperatura,
+              "humedad": humedad
+            })
+          })
+
+          // Ejecucion del servidor y definicion del puerto
+          const PORT = process.env.PORT || 3000;
+          app.listen(PORT, () => {
+            console.log(`Servidor escuchando en el puerto ${PORT}`);
+          });
+        </pre>
+        <p class="lead">
+          <h1>Programacion del ESP8266</h1>
+          En el ESP8266 se emplean todas las funciones del hardware que daran vida al proyecto.
+        </p>
+        <p class="lead">
+          <h1>Interfaz</h1>
+          La interfaz de esta aplicacion esta diseñada en html y javascript. La utilizacion de las librerias bootstrap para el diseño de UI/UX y la libreria Jquery para la facilitazion de la programacion de la app y solicitudes al servidor.
+        </p>
+
+      </p>
+      <p class="lead" id="temp"></p>
+      <p class="lead" id="humd"></p>
+    </div>
+
+    <div class="container my-5 border" id="app">
+      <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <h1 class="text-body-emphasis">Aplicacion</h1>
+        <div class="form-check form-switch text-start">
+          <p id="temp"></p>
+          <p id="humd"></p>
+          <input class="form-check-input" type="checkbox" role="switch" id="switchLed">
+          <label class="form-check-label">Encender/Apagar Luz</label>
         </div>
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script type="text/javascript">
-      $('document').ready(()=>{
-        $('#switchLed').change((event)=>{
-          if (event.target.checked) {
-              console.log("Encendido");
-              $.post("/eventosLed",{
-                state: "ON"
-              });
-          }
-          else {
-              console.log("Apagado");
-              $.post("/eventosLed",{
-                state: "OFF"
-              });
-          }
-        })
-      setInterval(()=>{
-        $.get("/tiempo",(data)=>{
-          console.log(data)
-          $("#temp").text("Temperatura Actual: "+data.temperatura)
-          $("#humd").text("Humedad: "+data.humedad)
-        })
-      }, 5000)
-      });
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script type="text/javascript">
+  $('document').ready(()=>{
+    $('#switchLed').change((event)=>{
+      if (event.target.checked) {
+        console.log("Encendido");
+        $.post("/eventosLed",{
+          state: "ON"
+        });
+      }
+      else {
+        console.log("Apagado");
+        $.post("/eventosLed",{
+          state: "OFF"
+        });
+      }
+    })
+    setInterval(()=>{
+      $.get("/tiempo",(data)=>{
+        console.log(data)
+        $("#temp").text("Temperatura Actual: "+data.temperatura)
+        $("#humd").text("Humedad: "+data.humedad)
+      })
+    }, 5000)
+  });
 
 
-    </script>
+  </script>
   </body>
-</html>
+  </html>
