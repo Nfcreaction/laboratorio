@@ -32,8 +32,10 @@ app.post('/eventosLed', (req,res)=>{
   console.log(led)
 })
 app.get('/tiempo', (req,res)=>{
-  res.send(humedad)
-  res.send(temperatura)
+  res.json({
+    "temperatura": temperatura,
+    "humedad": humedad
+  })
 })
 
 
