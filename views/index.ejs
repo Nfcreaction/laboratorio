@@ -98,16 +98,14 @@
         </p>
 
       </p>
-      <p class="lead" id="temp"></p>
-      <p class="lead" id="humd"></p>
     </div>
 
     <div class="container my-5 border" id="app">
       <div class="p-5 text-center bg-body-tertiary rounded-3">
         <h1 class="text-body-emphasis">Aplicacion</h1>
         <div class="form-check form-switch text-start">
-          <p id="temp"></p>
-          <p id="humd"></p>
+          <p class="lead" id="temp"></p>
+          <p class="lead" id="humd"></p>
           <input class="form-check-input" type="checkbox" role="switch" id="switchLed">
           <label class="form-check-label">Encender/Apagar Luz</label>
         </div>
@@ -136,8 +134,8 @@
     setInterval(()=>{
       $.get("/tiempo",(data)=>{
         console.log(data)
-        $("#temp").text("Temperatura Actual: "+data.temperatura)
-        $("#humd").text("Humedad: "+data.humedad)
+        $("#temp").text("Temperatura Actual: "+data.temperatura + "Cº")
+        $("#humd").text("Humedad: "+data.humedad + "%")
       })
     }, 5000)
   });
