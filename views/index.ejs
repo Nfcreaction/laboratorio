@@ -21,7 +21,8 @@
           </div>
         </div>
         <div class="col-6">
-          
+          <p id="temp"></p>  
+          <p id="humd"></p>  
         </div>
       </div>
     </div>
@@ -46,7 +47,7 @@
         })
       setInterval(()=>{
         $.get("/tiempo",(data)=>{
-          console.log(data)
+          $("#temp").text(data)
         })
       }, 5000)
       });
