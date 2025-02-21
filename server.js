@@ -19,7 +19,7 @@ app.get('/state/:temperatura/:humedad', (req, res)=>{
   res.send(led)  
   console.log(`
   *Consulta realizada: Estado LED y set de temp&humedad.*
-  -LED: ${LED}
+  -LED: ${led}
   -TEMP: ${temperatura}
   -HUMEDAD: ${humedad}
   `)
