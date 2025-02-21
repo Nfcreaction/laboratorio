@@ -47,7 +47,9 @@
         })
       setInterval(()=>{
         $.get("/tiempo",(data)=>{
-          $("#temp").text(data)
+          console.log(data)
+          $("#temp").text(data[0])
+          $("#humd").text(data[1])
         })
       }, 5000)
       });
